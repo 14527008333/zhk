@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.zhk.dao.MyDao">
+  	<select id="getList" resultType="Map">
+  		select m1.*,GROUP_CONCAT(t.tname) type from week1_move m1 left join week1_mid m2 on m1.mid=m2.mid left join week1_type t on m2.tid=t.tid
+  		<if test="mname!=null and mname!=''">
+  			where mname like concat('%',#{mname},'%')
+  		</if>
+  		 GROUP BY m1.mid
+  	</select>
+  	
+  	<select id="gettypeList" resultType="Type">
+  		select * from week1_type
+  		
+  	</select>
+  	
+  	<insert id="addmove" useGeneratedKeys="true">
+  		insert into week1_move values(null,#{mname},#{context},#{daoyan},#{startdate})
+  		<selectKey resultType="int" keyProperty="mid">
+  			select LAST_INSERT_ID()
+  		</selectKey>
+  	</insert>
+  	
+  		<insert id="addmid">
+  		insert into week1_mid values
+  		<foreach collection="tids" item="tid" separator=",">
+  			(#{mid},#{tid})
+  		</foreach>
+  		
+  		</insert>
+  		
+  		<select id="getmoveById" resultType="Map">
+  		select m1.*,GROUP_CONCAT(t.tid) type from week1_move m1 left join week1_mid m2 on m1.mid=m2.mid left join week1_type t on m2.tid=t.tid
+  		where m1.mid=#{mid}  GROUP BY m1.mid
+  		</select>
+  		
+  		<update id="updatemove">
+  			UPDATE `week1_move` SET mname=#{mname},context=#{context},daoyan=#{daoyan} ,startdate=#{startdate} WHERE mid = #{mid}
+  		</update>
+  		
+  		<delete id="delmid">
+  			delete from week1_mid where mid = #{mid}
+  		</delete>
+  		
+  		<delete id="delmids">
+  			delete from week1_mid where mid in (#{mids})
+  		</delete>
+  		
+  		<delete id="dels">
+  			delete from week1_move where mid in (#{mids})
+  		</delete>
+  		
+  </mapper>
+  

@@ -1,0 +1,6 @@
+com\zhk\service\MyserviceImp.class
+com\zhk\service\Myservice.class
+com\zhk\controller\Mycontroller.class
+com\zhk\bean\Type.class
+com\zhk\bean\Move.class
+com\zhk\dao\MyDao.class
